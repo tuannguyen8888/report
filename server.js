@@ -28,13 +28,27 @@ const consentURL = oauth2Client.generateAuthUrl({
     scope:['https://www.googleapis.com/auth/adsense.readonly'],  // If you only need one scope you can pass it as string
     prompt: 'consent'    // always prompt for consent
 });
-
+var gg_accounts = {};
+var db_gg_accs = firebase.database().ref('gg_accounts');
+db.on('value', function(snapshot){
+    if(snapshot.exists()) {
+        gg_accounts = snapshot.val();
+    }
+};
 app.get('/index', function(req, res) {
     console.log('request /index');
-    res.send(`click here: <a href="./auth/google">auth/google</a>`);
+    var html='';
+    var emails = Object.keys(gg_accounts);
+    for(var i=0; i<emails.length; i++){
+        html +='<p><a href="./auth/google?email=emails[i]'++'">'+emails[i]+'@gmail.com</a>: '+gg_accounts[emails[i]]+'</p>'
+    }
+    res.send(html);
 });
+var email_select = '';
 app.get('/auth/google', function(req, res) {
     console.log('request /auth/google');
+    console.log('req.query.email = ',req.query.email);
+    email_select = req.query.email;
     res.redirect(consentURL);
 });
 
@@ -44,6 +58,9 @@ app.get('/oauth2callback', function(req, res) {
     getTokens(req.query.code,
         function (tokens) {
             // save tokens somewhere in a DB or a file
+            if(email_select!='') {
+                firebase.database().ref('gg_accounts/'+email_select).set(req.query.code);
+            }
             res.send(`Received code: ${req.query.code}<br>Tokens: ${JSON.stringify(tokens)}<br>Save them.`);
         },
         function (err, response) {
@@ -95,19 +112,20 @@ function getLatestReport(callback) {
             return
         }
         // create report for yesterday. Today's revenue info is still inaccurate
-        const date = moment().add(-1, 'days').format('YYYY-MM-DD');
+        const date = moment().add(-2, 'days').format('YYYY-MM-DD');
         const params = {
             accountId: 'pub-8061268747449279',
             startDate: date,
             endDate: date,
             auth: oauth2Client,
-            metric: 'EARNINGS',   // https://developers.google.com/adsense/management/metrics-dimensions
-            dimension: 'AD_UNIT_ID'
+            metric: ['IMPRESSIONS','CLICKS','EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
+            dimension: ['AD_UNIT_ID','AD_UNIT_NAME','DATE']
         };
         adsense.accounts.reports.generate(params, function (errReport, resp) {
             if (errReport) {
                 callback(errReport)
             } else {
+                console.log('resp = ',resp);
                 callback(null, reportToString(resp))
             }
         });
