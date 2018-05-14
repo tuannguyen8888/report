@@ -30,11 +30,13 @@ const consentURL = oauth2Client.generateAuthUrl({
 });
 
 app.get('/auth/google', function(req, res) {
+    console.log('request /auth/google');
     res.redirect(consentURL);
 });
 
 // oauth2callback as defined in config.redirect_uris[0] in the Google Dev Console
 app.get('/oauth2callback', function(req, res) {
+    console.log('request /oauth2callback');
     getTokens(req.query.code,
         function (tokens) {
             // save tokens somewhere in a DB or a file
