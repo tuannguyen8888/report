@@ -53,6 +53,7 @@ function syncAdmobReport() {
             var adsense = google.adsense('v1.4');
             getDataReport(refresh_code,oauth2Client_email, adsense);
             function getDataReport(refresh_code,oauth2Client_email, adsense) {
+
                 oauth2Client_email.getToken(refresh_code, function (err, tokens, response) {
                     if (!err) {
                         console.log('tokens', tokens);
@@ -141,7 +142,7 @@ app.get('/oauth2callback', function(req, res) {
         function (tokens) {
             // save tokens somewhere in a DB or a file
             if(email_select!='') {
-                firebase.database().ref('gg_accounts/'+email_select).set(req.query.code);
+                firebase.database().ref('gg_accounts/'+email_select).set(tokens.refresh_token);//.set(req.query.code);
             }
             res.send(`Received code: ${req.query.code}<br>Tokens: ${JSON.stringify(tokens)}<br>Save them.`);
         },
