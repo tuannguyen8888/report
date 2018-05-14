@@ -25,7 +25,7 @@ const oauth2Client = new google.auth.OAuth2(
 
 const consentURL = oauth2Client.generateAuthUrl({
     access_type: 'offline', // 'online' (default) or 'offline' (gets refresh_token)
-    'https://www.googleapis.com/auth/adsense.readonly',  // If you only need one scope you can pass it as string
+    scope:['https://www.googleapis.com/auth/adsense.readonly'],  // If you only need one scope you can pass it as string
     prompt: 'consent'    // always prompt for consent
 });
 
