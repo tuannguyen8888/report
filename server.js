@@ -54,7 +54,7 @@ function getTokens(code, sucCallback, errCallback) {
         if (!err) {
             console.log('tokens',tokens);
             // set the tokens here for future API requests
-            oauth2Client.setCredentials(tokens);
+            oauth2Client.credentials = tokens;
             sucCallback(tokens);
         } else {
             errCallback(err, response);
