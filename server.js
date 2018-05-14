@@ -67,13 +67,17 @@ function getTokens(code, sucCallback, errCallback) {
 // or somewhere else with the saved tokens
 
 app.get('/adsense', function(req, res) {
+    console.log('request /adsense');
     getLatestReport(
         function (err, reportString) {
             if (err) {
                 // Send error per push notification, E-Mail etc.
+                console.log('err',err);
             } else {
                 // Send report per push notification, E-Mail etc.
                 // send(reportString)
+                console.log('reportString',reportString);
+                res.send(`reportString: ${reportString}`);
             }
         });
 });
