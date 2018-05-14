@@ -42,6 +42,7 @@ function syncAdmobReport() {
     console.info('======== syncAdmobReport ======');
     var emails = Object.keys(gg_accounts);
     for (var i=0; i<emails.length; i++){
+        console.log(emails[i],gg_accounts[emails[i]]);
         var refresh_code = gg_accounts[emails[i]];
         if(refresh_code!=null && refresh_code!='') {
             var oauth2Client_email = new google.auth.OAuth2(
@@ -56,7 +57,6 @@ function syncAdmobReport() {
                     if (!err) {
                         console.log('tokens', tokens);
                         // set the tokens here for future API requests
-                        i++;
                         oauth2Client_email.credentials = tokens;
                         adsense.accounts.list({auth: oauth2Client}, function (err, resp) {
                             if (err) {
