@@ -29,6 +29,10 @@ const consentURL = oauth2Client.generateAuthUrl({
     prompt: 'consent'    // always prompt for consent
 });
 
+app.get('/index', function(req, res) {
+    console.log('request /index');
+    res.send(`click here: <a href="./auth/google">auth/google</a>`);
+});
 app.get('/auth/google', function(req, res) {
     console.log('request /auth/google');
     res.redirect(consentURL);
@@ -93,12 +97,12 @@ function getLatestReport(callback) {
         // create report for yesterday. Today's revenue info is still inaccurate
         const date = moment().add(-1, 'days').format('YYYY-MM-DD');
         const params = {
-            accountId: 'pub-58**************',
+            accountId: 'pub-8061268747449279',
             startDate: date,
             endDate: date,
             auth: oauth2Client,
             metric: 'EARNINGS',   // https://developers.google.com/adsense/management/metrics-dimensions
-            dimension: 'AD_UNIT_NAME',
+            dimension: 'AD_UNIT_ID'
         };
         adsense.accounts.reports.generate(params, function (errReport, resp) {
             if (errReport) {
