@@ -40,7 +40,7 @@ app.get('/index', function(req, res) {
     var html='';
     var emails = Object.keys(gg_accounts);
     for(var i=0; i<emails.length; i++){
-        html +='<p><a href="./auth/google?email=emails[i]'++'">'+emails[i]+'@gmail.com</a>: '+gg_accounts[emails[i]]+'</p>'
+        html +='<p><a href="./auth/google?email='+emails[i]+'">'+emails[i]+'@gmail.com</a>: '+gg_accounts[emails[i]]+'</p>'
     }
     res.send(html);
 });
