@@ -64,15 +64,15 @@ function getTokens(code, sucCallback, errCallback) {
 
 app.get('/adsense', function(req, res) {
     getLatestReport(
-function(err, reportString) {
-    if (err) {
-        // Send error per push notification, E-Mail etc.
-    } else {
-        // Send report per push notification, E-Mail etc.
-        // send(reportString)
-    }
-})
-})
+        function (err, reportString) {
+            if (err) {
+                // Send error per push notification, E-Mail etc.
+            } else {
+                // Send report per push notification, E-Mail etc.
+                // send(reportString)
+            }
+        });
+});
 
 function getLatestReport(callback) {
     const adsense = google.adsense('v1.4');
@@ -104,11 +104,11 @@ function getLatestReport(callback) {
 
 function reportToString(report) {
     const date = moment(report.endDate);
-    let response = `AdMob Income for ${date.format('dddd MMM Do')}:`;
+    var response = `AdMob Income for ${date.format('dddd MMM Do')}:`;
     const numRows = report.totalMatchedRows;
     const rows = report.rows;
     const currency = report.headers.find(x => x.name === 'EARNINGS').currency;
-    for (let i = 0; i < numRows; i += 1) {
+    for (var i = 0; i < numRows; i += 1) {
         // This depends on your naming convention of your Ad units
         const name = rows[i][0].split('_')[0];
         const earnings = rows[i][1];
