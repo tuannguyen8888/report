@@ -35,7 +35,7 @@ db_gg_accs.on('value', function(snapshot){
         gg_accounts = snapshot.val();
     }
 });
-syncAdmobReport();
+setTimeout(syncAdmobReport,1000);
 setInterval(syncAdmobReport,5*60*1000);
 //var oauth2Client_email;
 function syncAdmobReport() {
@@ -43,75 +43,77 @@ function syncAdmobReport() {
     var emails = Object.keys(gg_accounts);
     for (var i=0; i<emails.length; i++){
         var refresh_code = gg_accounts[emails[i]];
-        var oauth2Client_email = new google.auth.OAuth2(
-            client_config.client_id,
-            client_config.client_secret,
-            client_config.redirect_uris[0]  // may NOT be an array. Otherwise, the consent site works, but silently fails in getToken.
-        );
-        var adsense = google.adsense('v1.4');
-        getDataReport(oauth2Client_email,adsense);
-        function getDataReport(oauth2Client_email,adsense) {
-            oauth2Client_email.getToken(refresh_code, function (err, tokens, response) {
-                if (!err) {
-                    console.log('tokens',tokens);
-                    // set the tokens here for future API requests
-                    i++;
-                    oauth2Client_email.credentials = tokens;
-                    adsense.accounts.list({ auth: oauth2Client },function (err,resp) {
-                        if(err){
-                            console.log('err adsense.accounts.list',err);
-                        }else{
-                            console.log('adsense.accounts.list resp',resp);
-                            if(resp.items!=null && resp.items.length){
-                                for (var t =0; t<resp.items.length; t++){
-                                    var item = resp.items[t];
-                                    if(item!=null) {
-                                        var from_date = moment().add(-2, 'days').format('YYYY-MM-DD');
-                                        var to_date = moment().format('YYYY-MM-DD');
-                                        var params = {
-                                            accountId: item.id,
-                                            startDate: from_date,
-                                            endDate: to_date,
-                                            auth: oauth2Client,
-                                            metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
-                                            dimension: ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE']
-                                        };
-                                        adsense.accounts.reports.generate(params, function (errReport, resp) {
-                                            if (errReport) {
-                                                console.error('adsense.accounts.reports.generate err = ', errReport);
-                                            } else {
-                                                console.log('resp = ', resp);
-                                                var rows = resp.rows;
-                                                for(var r=0; r<rows; r++){
-                                                    var row = row[r];
-                                                    var key = row[0].replace(':','@');
-                                                    //var ad_unit_name = row[1];
-                                                    var date = row[2];
-                                                    var view = parseInt(row[3]);
-                                                    var click = parseInt(row[4]);
-                                                    var money = parseFloat(row[5]);
-                                                    var statistic = {
-                                                        c_count: click,
-                                                        v_count: view,
-                                                        e_money: money,
-                                                        last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
-                                                    };
-                                                    console.log('statistic',statistic);
-                                                    firebase.database().ref('statistical/'+key+'/'+date)
-                                                        .set(statistic);
+        if(refresh_code!=null && refresh_code!='') {
+            var oauth2Client_email = new google.auth.OAuth2(
+                client_config.client_id,
+                client_config.client_secret,
+                client_config.redirect_uris[0]  // may NOT be an array. Otherwise, the consent site works, but silently fails in getToken.
+            );
+            var adsense = google.adsense('v1.4');
+            getDataReport(oauth2Client_email, adsense);
+            function getDataReport(oauth2Client_email, adsense) {
+                oauth2Client_email.getToken(refresh_code, function (err, tokens, response) {
+                    if (!err) {
+                        console.log('tokens', tokens);
+                        // set the tokens here for future API requests
+                        i++;
+                        oauth2Client_email.credentials = tokens;
+                        adsense.accounts.list({auth: oauth2Client}, function (err, resp) {
+                            if (err) {
+                                console.log('err adsense.accounts.list', err);
+                            } else {
+                                console.log('adsense.accounts.list resp', resp);
+                                if (resp.items != null && resp.items.length) {
+                                    for (var t = 0; t < resp.items.length; t++) {
+                                        var item = resp.items[t];
+                                        if (item != null) {
+                                            var from_date = moment().add(-2, 'days').format('YYYY-MM-DD');
+                                            var to_date = moment().format('YYYY-MM-DD');
+                                            var params = {
+                                                accountId: item.id,
+                                                startDate: from_date,
+                                                endDate: to_date,
+                                                auth: oauth2Client,
+                                                metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
+                                                dimension: ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE']
+                                            };
+                                            adsense.accounts.reports.generate(params, function (errReport, resp) {
+                                                if (errReport) {
+                                                    console.error('adsense.accounts.reports.generate err = ', errReport);
+                                                } else {
+                                                    console.log('resp = ', resp);
+                                                    var rows = resp.rows;
+                                                    for (var r = 0; r < rows; r++) {
+                                                        var row = row[r];
+                                                        var key = row[0].replace(':', '@');
+                                                        //var ad_unit_name = row[1];
+                                                        var date = row[2];
+                                                        var view = parseInt(row[3]);
+                                                        var click = parseInt(row[4]);
+                                                        var money = parseFloat(row[5]);
+                                                        var statistic = {
+                                                            c_count: click,
+                                                            v_count: view,
+                                                            e_money: money,
+                                                            last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                        };
+                                                        console.log('statistic', statistic);
+                                                        firebase.database().ref('statistical/' + key + '/' + date)
+                                                            .set(statistic);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
 
-                } else {
-                    console.log('loi refresh Token',err);
-                }
-            });
+                    } else {
+                        console.log('loi refresh Token', err);
+                    }
+                });
+            }
         }
     }
 }
