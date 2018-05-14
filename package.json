@@ -1,0 +1,18 @@
+{
+  "name": "syncadmobreport",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vo Tuan Nguyen",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "firebase-admin": "^5.12.0",
+    "moment": "^2.22.1",
+    "pm2": "^2.10.3",
+    "googleapis": "^23.0.0"
+  }
+}

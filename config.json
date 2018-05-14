@@ -1,0 +1,25 @@
+{
+  "accs": ["0987175076","01667987087"],
+  "google_accounts": [
+    {
+      "email":"pham1993hoang@gmail.com",
+      "jwt":"./JWT/AdmobReport-4113162e5841.json",
+      "accountId":"pub-8061268747449279"
+    },
+    {
+      "email":"mymy920817@gmail.com",
+      "jwt":"",
+      "accountId":""
+    },
+    {
+      "email":"nuongvo3579@gmail.com",
+      "jwt":"",
+      "accountId":""
+    },
+    {
+      "email":"leona68150@gmail.com",
+      "jwt":"",
+      "accountId":""
+    }
+  ]
+}
