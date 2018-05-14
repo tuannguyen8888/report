@@ -51,8 +51,8 @@ function syncAdmobReport() {
                 client_config.redirect_uris[0]  // may NOT be an array. Otherwise, the consent site works, but silently fails in getToken.
             );
             var adsense = google.adsense('v1.4');
-            getDataReport(oauth2Client_email, adsense);
-            function getDataReport(oauth2Client_email, adsense) {
+            getDataReport(refresh_code,oauth2Client_email, adsense);
+            function getDataReport(refresh_code,oauth2Client_email, adsense) {
                 oauth2Client_email.getToken(refresh_code, function (err, tokens, response) {
                     if (!err) {
                         console.log('tokens', tokens);
