@@ -30,11 +30,11 @@ const consentURL = oauth2Client.generateAuthUrl({
 });
 var gg_accounts = {};
 var db_gg_accs = firebase.database().ref('gg_accounts');
-db.on('value', function(snapshot){
+db_gg_accs.on('value', function(snapshot){
     if(snapshot.exists()) {
         gg_accounts = snapshot.val();
     }
-};
+});
 app.get('/index', function(req, res) {
     console.log('request /index');
     var html='';
