@@ -48,7 +48,7 @@ var email_select = '';
 app.get('/auth/google', function(req, res) {
     console.log('request /auth/google');
     console.log('req.query.email = ',req.query.email);
-    email_select = req.query.email;
+    email_select = req.query.email;// lay email trong duong dan
     res.redirect(consentURL);
 });
 
