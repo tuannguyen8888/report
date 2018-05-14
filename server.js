@@ -49,8 +49,10 @@ app.get('/oauth2callback', function(req, res) {
 });
 
 function getTokens(code, sucCallback, errCallback) {
+    console.log('getTokens code =',code);
     oauth2Client.getToken(code, function (err, tokens, response) {
         if (!err) {
+            console.log('tokens',tokens);
             // set the tokens here for future API requests
             oauth2Client.setCredentials(tokens);
             sucCallback(tokens);
