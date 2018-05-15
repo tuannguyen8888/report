@@ -65,9 +65,11 @@ function syncAdmobReport() {
                                 console.log('err adsense.accounts.list', err);
                             } else {
                                 console.log('adsense.accounts.list resp', resp);
+                                console.log('adsense.accounts.list resp =============================== done');
                                 if (resp.items != null && resp.items.length) {
                                     for (var t = 0; t < resp.items.length; t++) {
                                         var item = resp.items[t];
+                                        console.log('resp.items[t]',item);
                                         if (item != null) {
                                             var from_date = moment().add(-2, 'days').format('YYYY-MM-DD');
                                             var to_date = moment().format('YYYY-MM-DD');
@@ -79,7 +81,7 @@ function syncAdmobReport() {
                                                 metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
                                                 dimension: ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE']
                                             };
-                                            adsense.accounts.reports.generate(params, function (errReport, resp) {
+                                            /*adsense.accounts.reports.generate(params, function (errReport, resp) {
                                                 if (errReport) {
                                                     console.error('adsense.accounts.reports.generate err = ', errReport);
                                                 } else {
@@ -105,7 +107,7 @@ function syncAdmobReport() {
                                                     }
                                                 }
                                             });
-
+                                            */
                                         }
                                     }
                                 }
