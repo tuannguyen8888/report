@@ -69,7 +69,7 @@ function syncAdmobReport() {
                                         var item = resp.data.items[t];
                                         console.log('account id = ',item.id);
                                         if (item != null) {
-                                            var from_date = moment().add(-2, 'days').format('YYYY-MM-DD');
+                                            var from_date = moment().add(-1, 'days').format('YYYY-MM-DD');
                                             var to_date = moment().format('YYYY-MM-DD');
                                             var params = {
                                                 accountId: item.id,
@@ -87,7 +87,7 @@ function syncAdmobReport() {
                                                     console.log('data = ', resp.data);
                                                     var rows = resp.data.rows;
                                                     for (var r = 0; r < rows.length; r++) {
-                                                        var row = row[r];
+                                                        var row = rows[r];
                                                         console.log('row = ', row);
                                                         var key = row[0].replace(':', '@');
                                                         //var ad_unit_name = row[1];
