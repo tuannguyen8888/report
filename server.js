@@ -60,7 +60,7 @@ function syncAdmobReport() {
                     if (!err) {
                         console.log('accessToken', accessToken);
 
-                        adsense.accounts.list({auth: oauth2Client_email, pageToken: accessToken}, function (err, resp) {
+                        adsense.accounts.list({auth: oauth2Client_email}, function (err, resp) {
                             if (err) {
                                 console.log('err adsense.accounts.list', err);
                             } else {
