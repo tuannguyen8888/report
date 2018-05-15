@@ -42,7 +42,7 @@ function syncAdmobReport() {
     console.info('======== syncAdmobReport ======');
     var emails = Object.keys(gg_accounts);
     for (var i=0; i<emails.length; i++){
-        console.log(emails[i],gg_accounts[emails[i]]);
+        console.log(emails[i]);
         var token = gg_accounts[emails[i]];
         if(token!=null && token!='') {
 
@@ -64,12 +64,10 @@ function syncAdmobReport() {
                             if (err) {
                                 console.log('err adsense.accounts.list', err);
                             } else {
-                                console.log('adsense.accounts.list resp.data.items', resp.data.items);
-                                console.log('adsense.accounts.list resp =============================== done');
                                 if (resp.data.items != null && resp.data.items.length>0) {
-                                    for (var t = 0; t < resp.items.length; t++) {
-                                        var item = resp.items[t];
-                                        console.log('resp.items[t]',item);
+                                    for (var t = 0; t < resp.data.items.length; t++) {
+                                        var item = resp.data.items[t];
+                                        console.log('resp.data.items[t]',item);
                                         if (item != null) {
                                             var from_date = moment().add(-2, 'days').format('YYYY-MM-DD');
                                             var to_date = moment().format('YYYY-MM-DD');
@@ -81,7 +79,8 @@ function syncAdmobReport() {
                                                 metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
                                                 dimension: ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE']
                                             };
-                                            /*adsense.accounts.reports.generate(params, function (errReport, resp) {
+                                            console.info('get report');
+                                            adsense.accounts.reports.generate(params, function (errReport, resp) {
                                                 if (errReport) {
                                                     console.error('adsense.accounts.reports.generate err = ', errReport);
                                                 } else {
@@ -107,7 +106,6 @@ function syncAdmobReport() {
                                                     }
                                                 }
                                             });
-                                            */
                                         }
                                     }
                                 }
