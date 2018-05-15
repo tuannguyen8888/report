@@ -86,7 +86,7 @@ function syncAdmobReport() {
                                                 } else {
                                                     console.log('data = ', resp.data);
                                                     var rows = resp.data.rows;
-                                                    for (var r = 0; r < rows; r++) {
+                                                    for (var r = 0; r < rows.length; r++) {
                                                         var row = row[r];
                                                         console.log('row = ', row);
                                                         var key = row[0].replace(':', '@');
