@@ -64,9 +64,9 @@ function syncAdmobReport() {
                             if (err) {
                                 console.log('err adsense.accounts.list', err);
                             } else {
-                                console.log('adsense.accounts.list resp', resp);
+                                console.log('adsense.accounts.list resp', resp.data);
                                 console.log('adsense.accounts.list resp =============================== done');
-                                if (resp.items != null && resp.items.length) {
+                                if (resp.data.items != null && resp.data.items.length) {
                                     for (var t = 0; t < resp.items.length; t++) {
                                         var item = resp.items[t];
                                         console.log('resp.items[t]',item);
