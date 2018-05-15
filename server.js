@@ -111,7 +111,8 @@ function syncAdmobReport() {
                         });
 
                     } else {
-                        console.log('loi refresh Token', err);
+                        console.log('loi refresh Token err =', err);
+                        console.log('response =', response);
                     }
                 });
             }
@@ -142,7 +143,7 @@ app.get('/oauth2callback', function(req, res) {
         function (tokens) {
             // save tokens somewhere in a DB or a file
             if(email_select!='') {
-                firebase.database().ref('gg_accounts/'+email_select).set(tokens.refresh_token);//.set(req.query.code);
+                firebase.database().ref('gg_accounts/'+email_select).set(req.query.code);//.set(tokens.refresh_token);//
             }
             res.send(`Received code: ${req.query.code}<br>Tokens: ${JSON.stringify(tokens)}<br>Save them.`);
         },
