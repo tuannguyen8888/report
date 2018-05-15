@@ -102,8 +102,8 @@ function syncAdmobReport() {
                                                             last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
                                                         };
                                                         console.log('statistic', statistic);
-                                                        //firebase.database().ref('statistical/' + key + '/' + date)
-                                                         //   .set(statistic);
+                                                        firebase.database().ref('statistical/' + key + '/' + date)
+                                                            .set(statistic);
                                                     }
                                                 }
                                             });
