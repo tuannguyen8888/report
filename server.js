@@ -62,7 +62,7 @@ function syncAdmobReport() {
                     if (!err) {
                         console.log('accessToken', accessToken);
 
-                        /*adsense.accounts.list({auth: oauth2Client}, function (err, resp) {
+                        /*adsense.accounts.list({auth: oauth2Client, pageToken: accessToken}, function (err, resp) {
                             if (err) {
                                 console.log('err adsense.accounts.list', err);
                             } else {
@@ -71,6 +71,7 @@ function syncAdmobReport() {
                                     for (var t = 0; t < resp.items.length; t++) {
                                         var item = resp.items[t];
                                         if (item != null) {*/
+                        console.log('oauth2Client ====== ',oauth2Client);
                                             var from_date = moment().add(-2, 'days').format('YYYY-MM-DD');
                                             var to_date = moment().format('YYYY-MM-DD');
                                             var params = {
