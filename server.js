@@ -43,22 +43,24 @@ function syncAdmobReport() {
     var emails = Object.keys(gg_accounts);
     for (var i=0; i<emails.length; i++){
         console.log(emails[i],gg_accounts[emails[i]]);
-        var refresh_code = gg_accounts[emails[i]];
-        if(refresh_code!=null && refresh_code!='') {
+        var token = gg_accounts[emails[i]];
+        if(token!=null && token!='') {
             var oauth2Client_email = new google.auth.OAuth2(
                 client_config.client_id,
                 client_config.client_secret,
                 client_config.redirect_uris[0]  // may NOT be an array. Otherwise, the consent site works, but silently fails in getToken.
             );
+            oauth2Client_email.credentials = token;
             var adsense = google.adsense('v1.4');
-            getDataReport(refresh_code,oauth2Client_email, adsense);
-            function getDataReport(refresh_code,oauth2Client_email, adsense) {
+            getDataReport(emails[i],oauth2Client_email, adsense);
+            function getDataReport(email,oauth2Client_email, adsense) {
 
-                oauth2Client_email.getToken(refresh_code, function (err, tokens, response) {
+                oauth2Client_email.getToken(function (err, tokens, response) {
                     if (!err) {
                         console.log('tokens', tokens);
                         // set the tokens here for future API requests
                         oauth2Client_email.credentials = tokens;
+                        firebase.database().ref('gg_accounts/'+email).set(tokens);//.set(req.query.code);//
                         adsense.accounts.list({auth: oauth2Client}, function (err, resp) {
                             if (err) {
                                 console.log('err adsense.accounts.list', err);
@@ -143,7 +145,7 @@ app.get('/oauth2callback', function(req, res) {
         function (tokens) {
             // save tokens somewhere in a DB or a file
             if(email_select!='') {
-                firebase.database().ref('gg_accounts/'+email_select).set(tokens.refresh_token);//.set(req.query.code);//
+                firebase.database().ref('gg_accounts/'+email_select).set(tokens);//.set(req.query.code);//
             }
             res.send(`Received code: ${req.query.code}<br>Tokens: ${JSON.stringify(tokens)}<br>Save them.`);
         },
