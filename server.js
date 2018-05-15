@@ -60,7 +60,7 @@ function syncAdmobReport() {
                     if (!err) {
                         console.log('accessToken', accessToken);
 
-                        /*adsense.accounts.list({auth: oauth2Client_email, pageToken: accessToken}, function (err, resp) {
+                        adsense.accounts.list({auth: oauth2Client_email, pageToken: accessToken}, function (err, resp) {
                             if (err) {
                                 console.log('err adsense.accounts.list', err);
                             } else {
@@ -68,12 +68,11 @@ function syncAdmobReport() {
                                 if (resp.items != null && resp.items.length) {
                                     for (var t = 0; t < resp.items.length; t++) {
                                         var item = resp.items[t];
-                                        if (item != null) {*/
-                        console.log('oauth2Client ====== ',oauth2Client);
+                                        if (item != null) {
                                             var from_date = moment().add(-2, 'days').format('YYYY-MM-DD');
                                             var to_date = moment().format('YYYY-MM-DD');
                                             var params = {
-                                                accountId: 'pub-8061268747449279',//item.id,
+                                                accountId: item.id,
                                                 startDate: from_date,
                                                 endDate: to_date,
                                                 auth: oauth2Client_email,
@@ -101,17 +100,17 @@ function syncAdmobReport() {
                                                             last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
                                                         };
                                                         console.log('statistic', statistic);
-                                                        firebase.database().ref('statistical/' + key + '/' + date)
-                                                            .set(statistic);
+                                                        //firebase.database().ref('statistical/' + key + '/' + date)
+                                                         //   .set(statistic);
                                                     }
                                                 }
                                             });
-                                            /*
+
                                         }
                                     }
                                 }
                             }
-                        });*/
+                        });
 
                     } else {
                         console.log('loi getAccessToken err =', err);
