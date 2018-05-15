@@ -25,10 +25,7 @@ const oauth2Client = new google.auth.OAuth2(
 
 const consentURL = oauth2Client.generateAuthUrl({
     access_type: 'offline', // 'online' (default) or 'offline' (gets refresh_token)
-    scope:[
-        'https://www.googleapis.com/auth/adsense',
-        'https://www.googleapis.com/auth/adsense.readonly',
-    ],  // If you only need one scope you can pass it as string
+    scope:'https://www.googleapis.com/auth/adsense.readonly', // If you only need one scope you can pass it as string
     prompt: 'consent'    // always prompt for consent
 });
 var gg_accounts = {};
@@ -147,7 +144,8 @@ app.get('/auth/google', function(req, res) {
 // oauth2callback as defined in config.redirect_uris[0] in the Google Dev Console
 app.get('/oauth2callback', function(req, res) {
     console.log('request /oauth2callback');
-    getTokens(req.query.code,
+    getTokens(
+        req.query.code,
         function (tokens) {
             // save tokens somewhere in a DB or a file
             if(email_select!='') {
@@ -160,7 +158,7 @@ app.get('/oauth2callback', function(req, res) {
         }
     );
 });
-
+var tmp_token;
 function getTokens(code, sucCallback, errCallback) {
     console.log('getTokens code =',code);
     oauth2Client.getToken(code, function (err, tokens, response) {
@@ -168,6 +166,7 @@ function getTokens(code, sucCallback, errCallback) {
             console.log('tokens',tokens);
             // set the tokens here for future API requests
             oauth2Client.credentials = tokens;
+            tmp_token = tokens;
             sucCallback(tokens);
         } else {
             errCallback(err, response);
@@ -198,9 +197,15 @@ app.get('/adsense', function(req, res) {
 function getReport(callback) {
     const adsense = google.adsense('v1.4');
     // Get a non-expired access token, after refreshing if necessary https://github.com/google/google-auth-library-nodejs/blob/master/lib/auth/oauth2client.js
-    oauth2Client.getAccessToken(function (err, accessToken) {
+    var new_oauth2Client = new google.auth.OAuth2(
+        client_config.client_id,
+        client_config.client_secret,
+        client_config.redirect_uris[0]  // may NOT be an array. Otherwise, the consent site works, but silently fails in getToken.
+    );
+    new_oauth2Client.credentials = tmp_token;
+    new_oauth2Client.getAccessToken(function (err, accessToken) {
         if (err) {
-            callback(`getAccessToken Error: ${err}`)
+            callback(`getAccessToken Error: ${err}`);
             return
         }
         // create report for yesterday. Today's revenue info is still inaccurate
@@ -210,7 +215,7 @@ function getReport(callback) {
             accountId: 'pub-8061268747449279',
             startDate: from_date,
             endDate: to_date,
-            auth: oauth2Client,
+            auth: new_oauth2Client,
             metric: ['IMPRESSIONS','CLICKS','EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
             dimension: ['AD_UNIT_ID','AD_UNIT_NAME','DATE']
         };
