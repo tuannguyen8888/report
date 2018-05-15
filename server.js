@@ -55,12 +55,10 @@ function syncAdmobReport() {
             getDataReport(emails[i],oauth2Client_email, adsense);
             function getDataReport(email,oauth2Client_email, adsense) {
 
-                oauth2Client_email.getToken(function (err, tokens, response) {
+                oauth2Client_email.getAccessToken(function (err, accessToken) {
                     if (!err) {
-                        console.log('tokens', tokens);
-                        // set the tokens here for future API requests
-                        oauth2Client_email.credentials = tokens;
-                        firebase.database().ref('gg_accounts/'+email).set(tokens);//.set(req.query.code);//
+                        console.log('accessToken', accessToken);
+
                         adsense.accounts.list({auth: oauth2Client}, function (err, resp) {
                             if (err) {
                                 console.log('err adsense.accounts.list', err);
@@ -113,8 +111,7 @@ function syncAdmobReport() {
                         });
 
                     } else {
-                        console.log('loi refresh Token err =', err);
-                        console.log('response =', response);
+                        console.log('loi getAccessToken err =', err);
                     }
                 });
             }
