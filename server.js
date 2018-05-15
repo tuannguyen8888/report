@@ -45,25 +45,22 @@ function syncAdmobReport() {
         console.log(emails[i],gg_accounts[emails[i]]);
         var token = gg_accounts[emails[i]];
         if(token!=null && token!='') {
-            var oauth2Client_email = new google.auth.OAuth2(
-                client_config.client_id,
-                client_config.client_secret,
-                client_config.redirect_uris[0]  // may NOT be an array. Otherwise, the consent site works, but silently fails in getToken.
-            );
-            oauth2Client_email.credentials = token;
+
             var adsense = google.adsense('v1.4');
-            getDataReport(emails[i],oauth2Client_email, adsense);
-            function getDataReport(email,oauth2Client_email, adsense) {
-                oauth2Client_email.generateAuthUrl({
-                    access_type: 'offline', // 'online' (default) or 'offline' (gets refresh_token)
-                    scope: 'https://www.googleapis.com/auth/adsense.readonly',  // If you only need one scope you can pass it as string
-                    prompt: 'consent'    // always prompt for consent
-                });
+            getDataReport(emails[i],token, adsense);
+            function getDataReport(email, token, adsense) {
+                var oauth2Client_email = new google.auth.OAuth2(
+                    client_config.client_id,
+                    client_config.client_secret,
+                    client_config.redirect_uris[0]  // may NOT be an array. Otherwise, the consent site works, but silently fails in getToken.
+                );
+                oauth2Client_email.credentials = token;
+
                 oauth2Client_email.getAccessToken(function (err, accessToken) {
                     if (!err) {
                         console.log('accessToken', accessToken);
 
-                        /*adsense.accounts.list({auth: oauth2Client, pageToken: accessToken}, function (err, resp) {
+                        /*adsense.accounts.list({auth: oauth2Client_email, pageToken: accessToken}, function (err, resp) {
                             if (err) {
                                 console.log('err adsense.accounts.list', err);
                             } else {
@@ -79,7 +76,7 @@ function syncAdmobReport() {
                                                 accountId: 'pub-8061268747449279',//item.id,
                                                 startDate: from_date,
                                                 endDate: to_date,
-                                                auth: oauth2Client,
+                                                auth: oauth2Client_email,
                                                 metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
                                                 dimension: ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE']
                                             };
