@@ -4,7 +4,7 @@ var app = express();
 app.listen(80, function () {
   console.log('app started');
 });
-var google = require('googleapis');
+var {google} = require('googleapis');
 var serviceAccount = require('./vietnam-travel-tips-firebase-adminsdk-krq6z-7ae80a5c03.json');
 var firebase = require('firebase-admin');
 var moment = require('moment');
