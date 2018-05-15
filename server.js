@@ -77,7 +77,8 @@ function syncAdmobReport() {
                                                 endDate: to_date,
                                                 auth: oauth2Client_email,
                                                 metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
-                                                dimension: ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE']
+                                                dimension: ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE'],
+                                                useTimezoneReporting: true
                                             };
                                             console.info('get report');
                                             adsense.accounts.reports.generate(params, function (errReport, resp) {
