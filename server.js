@@ -67,7 +67,7 @@ function syncAdmobReport() {
                                 if (resp.data.items != null && resp.data.items.length>0) {
                                     for (var t = 0; t < resp.data.items.length; t++) {
                                         var item = resp.data.items[t];
-                                        console.log('resp.data.items[t]',item);
+                                        console.log('account id = ',item.id);
                                         if (item != null) {
                                             var from_date = moment().add(-2, 'days').format('YYYY-MM-DD');
                                             var to_date = moment().format('YYYY-MM-DD');
@@ -84,10 +84,11 @@ function syncAdmobReport() {
                                                 if (errReport) {
                                                     console.error('adsense.accounts.reports.generate err = ', errReport);
                                                 } else {
-                                                    console.log('resp = ', resp);
-                                                    var rows = resp.rows;
+                                                    console.log('data = ', resp.data);
+                                                    var rows = resp.data.rows;
                                                     for (var r = 0; r < rows; r++) {
                                                         var row = row[r];
+                                                        console.log('row = ', row);
                                                         var key = row[0].replace(':', '@');
                                                         //var ad_unit_name = row[1];
                                                         var date = row[2];
