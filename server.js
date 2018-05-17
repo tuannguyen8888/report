@@ -119,10 +119,11 @@ function syncAdmobReport() {
                                                         console.error('adsense.accounts.reports.generate COUNTRY_NAME SERVED_AD_TYPE_NAME err = ', errReport);
                                                     }
                                                     else {
+                                                        console.log('COUNTRY_NAME SERVED_AD_TYPE_NAME');
                                                         var rows = resp.data.rows;
                                                         for (var r = 0; r < rows.length; r++) {
                                                             var row = rows[r];
-                                                            //console.log('row = ', row);
+                                                            console.log('row = ', row);
                                                             var key = row[0].replace(':', '@');
                                                             //var ad_unit_name = row[1];
                                                             var date = row[2];
