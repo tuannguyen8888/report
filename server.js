@@ -77,7 +77,7 @@ function syncAdmobReport() {
                                                 endDate: to_date,
                                                 auth: oauth2Client_email,
                                                 metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
-                                                dimension: ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE'],
+                                                dimension: ['AD_UNIT_ID', 'DATE'],
                                                 useTimezoneReporting: true
                                             };
                                             console.info('get report');
@@ -92,10 +92,10 @@ function syncAdmobReport() {
                                                         //console.log('row = ', row);
                                                         var key = row[0].replace(':', '@');
                                                         //var ad_unit_name = row[1];
-                                                        var date = row[2];
-                                                        var view = parseInt(row[3]);
-                                                        var click = parseInt(row[4]);
-                                                        var money = parseFloat(row[5]);
+                                                        var date = row[1];
+                                                        var view = parseInt(row[2]);
+                                                        var click = parseInt(row[3]);
+                                                        var money = parseFloat(row[4]);
                                                         /*var statistic = {
                                                             c_count: click,
                                                             v_count: view,
@@ -112,9 +112,17 @@ function syncAdmobReport() {
                                                     }
                                                 }
                                             });
-                                            params.dimension = ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE', 'COUNTRY_NAME', 'SERVED_AD_TYPE_NAME'];
-                                            console.log('get COUNTRY_NAME SERVED_AD_TYPE_NAME = ',params);
-                                            adsense.accounts.reports.generate(params, function (errReport, resp) {
+                                            var params2 = {
+                                                accountId: item.id,
+                                                startDate: from_date,
+                                                endDate: to_date,
+                                                auth: oauth2Client_email,
+                                                metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
+                                                dimension: ['AD_UNIT_ID', 'DATE', 'COUNTRY_NAME', 'SERVED_AD_TYPE_NAME'],
+                                                useTimezoneReporting: true
+                                            };
+                                            console.log('get COUNTRY_NAME SERVED_AD_TYPE_NAME = ',params2);
+                                            adsense.accounts.reports.generate(params2, function (errReport, resp) {
                                                 if (errReport) {
                                                     console.error('adsense.accounts.reports.generate COUNTRY_NAME SERVED_AD_TYPE_NAME err = ', errReport);
                                                 }
@@ -126,12 +134,12 @@ function syncAdmobReport() {
                                                         console.log('row = ', row);
                                                         var key = row[0].replace(':', '@');
                                                         //var ad_unit_name = row[1];
-                                                        var date = row[2];
-                                                        var country = row[3];
-                                                        var type = row[4];
-                                                        var view = parseInt(row[5]);
-                                                        var click = parseInt(row[6]);
-                                                        var money = parseFloat(row[7]);
+                                                        var date = row[1];
+                                                        var country = row[2];
+                                                        var type = row[3];
+                                                        var view = parseInt(row[4]);
+                                                        var click = parseInt(row[5]);
+                                                        var money = parseFloat(row[6]);
                                                         var statistic = {
                                                             c_count: click,
                                                             v_count: view,
