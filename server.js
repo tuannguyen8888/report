@@ -69,7 +69,7 @@ function syncAdmobReport() {
                                         var item = resp.data.items[t];
                                         console.log('account id = ',item.id);
                                         if (item != null) {
-                                            var from_date = moment().add(-60, 'days').format('YYYY-MM-DD');
+                                            var from_date = moment().add(-1, 'days').format('YYYY-MM-DD');
                                             var to_date = moment().add(1, 'days').format('YYYY-MM-DD');
                                             var params = {
                                                 accountId: item.id,
