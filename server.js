@@ -69,7 +69,7 @@ function syncAdmobReport() {
                                         var item = resp.data.items[t];
                                         console.log('account id = ',item.id);
                                         if (item != null) {
-                                            var from_date = moment().add(-1, 'days').format('YYYY-MM-DD');
+                                            var from_date = moment().add(-60, 'days').format('YYYY-MM-DD');
                                             var to_date = moment().add(1, 'days').format('YYYY-MM-DD');
                                             var params = {
                                                 accountId: item.id,
@@ -85,7 +85,7 @@ function syncAdmobReport() {
                                                 if (errReport) {
                                                     console.error('adsense.accounts.reports.generate err = ', errReport);
                                                 } else {
-                                                    console.log('data = ', resp.data);
+                                                    // console.log('data = ', resp.data);
                                                     var rows = resp.data.rows;
                                                     for (var r = 0; r < rows.length; r++) {
                                                         var row = rows[r];
@@ -96,18 +96,54 @@ function syncAdmobReport() {
                                                         var view = parseInt(row[3]);
                                                         var click = parseInt(row[4]);
                                                         var money = parseFloat(row[5]);
-                                                        var statistic = {
+                                                        /*var statistic = {
                                                             c_count: click,
                                                             v_count: view,
                                                             e_money: money,
                                                             last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
-                                                        };
+                                                        };*/
                                                         console.log('statistic', statistic);
-                                                        firebase.database().ref('statistical/' + key + '/' + date)
-                                                            .set(statistic);
+                                                        //firebase.database().ref('statistical/' + key + '/' + date)
+                                                        //    .set(statistic);
+                                                        firebase.database().ref('statistical/' + key + '/' + date+'/v_count').set(view);
+                                                        firebase.database().ref('statistical/' + key + '/' + date+'/c_count').set(click);
+                                                        firebase.database().ref('statistical/' + key + '/' + date+'/e_money').set(money);
+                                                        firebase.database().ref('statistical/' + key + '/' + date+'/last_update_at').set(moment().format('YYYY-MM-DD HH:mm:ss'));
                                                     }
                                                 }
                                             });
+                                            if(moment().hour()>1){
+                                                params.dimension = ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE', 'COUNTRY_NAME', 'SERVED_AD_TYPE_NAME'];
+                                                adsense.accounts.reports.generate(params, function (errReport, resp) {
+                                                    if (errReport) {
+                                                        console.error('adsense.accounts.reports.generate COUNTRY_NAME SERVED_AD_TYPE_NAME err = ', errReport);
+                                                    }
+                                                    else {
+                                                        var rows = resp.data.rows;
+                                                        for (var r = 0; r < rows.length; r++) {
+                                                            var row = rows[r];
+                                                            //console.log('row = ', row);
+                                                            var key = row[0].replace(':', '@');
+                                                            //var ad_unit_name = row[1];
+                                                            var date = row[2];
+                                                            var country = row[3];
+                                                            var type = row[4];
+                                                            var view = parseInt(row[5]);
+                                                            var click = parseInt(row[6]);
+                                                            var money = parseFloat(row[7]);
+                                                            var statistic = {
+                                                                c_count: click,
+                                                                v_count: view,
+                                                                e_money: money,
+                                                                last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                            };
+                                                            console.log('statistic', statistic);
+                                                            firebase.database().ref('statistical/' + key + '/' + date + '/analytics/' + country + '/' + type)
+                                                                .set(statistic);
+                                                        }
+                                                    }
+                                                });
+                                            }
                                         }
                                     }
                                 }
