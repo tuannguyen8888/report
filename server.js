@@ -102,7 +102,7 @@ function syncAdmobReport() {
                                                             e_money: money,
                                                             last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
                                                         };*/
-                                                        console.log('statistic', statistic);
+                                                        //console.log('statistic', statistic);
                                                         //firebase.database().ref('statistical/' + key + '/' + date)
                                                         //    .set(statistic);
                                                         firebase.database().ref('statistical/' + key + '/' + date+'/v_count').set(view);
@@ -137,7 +137,7 @@ function syncAdmobReport() {
                                                                 e_money: money,
                                                                 last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
                                                             };
-                                                            console.log('statistic', statistic);
+                                                            //console.log('statistic', statistic);
                                                             firebase.database().ref('statistical/' + key + '/' + date + '/analytics/' + country + '/' + type)
                                                                 .set(statistic);
                                                         }
