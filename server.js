@@ -89,7 +89,7 @@ function syncAdmobReport() {
                                                     var rows = resp.data.rows;
                                                     for (var r = 0; r < rows.length; r++) {
                                                         var row = rows[r];
-                                                        console.log('row = ', row);
+                                                        //console.log('row = ', row);
                                                         var key = row[0].replace(':', '@');
                                                         //var ad_unit_name = row[1];
                                                         var date = row[2];
@@ -112,40 +112,38 @@ function syncAdmobReport() {
                                                     }
                                                 }
                                             });
-                                            if(moment().hour()>1){
-                                                params.dimension = ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE', 'COUNTRY_NAME', 'SERVED_AD_TYPE_NAME'];
-                                                console.log('get COUNTRY_NAME SERVED_AD_TYPE_NAME = ',params);
-                                                adsense.accounts.reports.generate(params, function (errReport, resp) {
-                                                    if (errReport) {
-                                                        console.error('adsense.accounts.reports.generate COUNTRY_NAME SERVED_AD_TYPE_NAME err = ', errReport);
+                                            params.dimension = ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE', 'COUNTRY_NAME', 'SERVED_AD_TYPE_NAME'];
+                                            console.log('get COUNTRY_NAME SERVED_AD_TYPE_NAME = ',params);
+                                            adsense.accounts.reports.generate(params, function (errReport, resp) {
+                                                if (errReport) {
+                                                    console.error('adsense.accounts.reports.generate COUNTRY_NAME SERVED_AD_TYPE_NAME err = ', errReport);
+                                                }
+                                                else {
+                                                    console.log('COUNTRY_NAME SERVED_AD_TYPE_NAME');
+                                                    var rows = resp.data.rows;
+                                                    for (var r = 0; r < rows.length; r++) {
+                                                        var row = rows[r];
+                                                        console.log('row = ', row);
+                                                        var key = row[0].replace(':', '@');
+                                                        //var ad_unit_name = row[1];
+                                                        var date = row[2];
+                                                        var country = row[3];
+                                                        var type = row[4];
+                                                        var view = parseInt(row[5]);
+                                                        var click = parseInt(row[6]);
+                                                        var money = parseFloat(row[7]);
+                                                        var statistic = {
+                                                            c_count: click,
+                                                            v_count: view,
+                                                            e_money: money,
+                                                            last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                        };
+                                                        //console.log('statistic', statistic);
+                                                        firebase.database().ref('statistical/' + key + '/' + date + '/analytics/' + country + '/' + type)
+                                                            .set(statistic);
                                                     }
-                                                    else {
-                                                        console.log('COUNTRY_NAME SERVED_AD_TYPE_NAME');
-                                                        var rows = resp.data.rows;
-                                                        for (var r = 0; r < rows.length; r++) {
-                                                            var row = rows[r];
-                                                            console.log('row = ', row);
-                                                            var key = row[0].replace(':', '@');
-                                                            //var ad_unit_name = row[1];
-                                                            var date = row[2];
-                                                            var country = row[3];
-                                                            var type = row[4];
-                                                            var view = parseInt(row[5]);
-                                                            var click = parseInt(row[6]);
-                                                            var money = parseFloat(row[7]);
-                                                            var statistic = {
-                                                                c_count: click,
-                                                                v_count: view,
-                                                                e_money: money,
-                                                                last_update_at: moment().format('YYYY-MM-DD HH:mm:ss')
-                                                            };
-                                                            //console.log('statistic', statistic);
-                                                            firebase.database().ref('statistical/' + key + '/' + date + '/analytics/' + country + '/' + type)
-                                                                .set(statistic);
-                                                        }
-                                                    }
-                                                });
-                                            }
+                                                }
+                                            });
                                         }
                                     }
                                 }
