@@ -114,6 +114,7 @@ function syncAdmobReport() {
                                             });
                                             if(moment().hour()>1){
                                                 params.dimension = ['AD_UNIT_ID', 'AD_UNIT_NAME', 'DATE', 'COUNTRY_NAME', 'SERVED_AD_TYPE_NAME'];
+                                                console.log('get COUNTRY_NAME SERVED_AD_TYPE_NAME = ',params);
                                                 adsense.accounts.reports.generate(params, function (errReport, resp) {
                                                     if (errReport) {
                                                         console.error('adsense.accounts.reports.generate COUNTRY_NAME SERVED_AD_TYPE_NAME err = ', errReport);
