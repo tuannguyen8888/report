@@ -118,7 +118,7 @@ function syncAdmobReport() {
                                                 endDate: to_date,
                                                 auth: oauth2Client_email,
                                                 metric: ['IMPRESSIONS', 'CLICKS', 'EARNINGS'],   // https://developers.google.com/adsense/management/metrics-dimensions
-                                                dimension: ['AD_UNIT_ID', 'DATE', 'COUNTRY_NAME', 'SERVED_AD_TYPE_NAME'],
+                                                dimension: ['AD_UNIT_ID', 'DATE', 'COUNTRY_NAME', 'AD_FORMAT_NAME'],
                                                 useTimezoneReporting: true
                                             };
                                             console.log('get COUNTRY_NAME SERVED_AD_TYPE_NAME = ',params2);
